@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+   db:
+      image: mysql:8.0
+      environment:
+        MYSQL_ROOT_PASSWORD: example_root_password
+        MYSQL_DATABASE: bookstoredb
+        MYSQL_USER: user
+        MYSQL_PASSWORD: password
+      ports:
+         - "3000:3306"
+      healthcheck:
+       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+       interval: 5s
+       timeout: 5s
+       retries: 5
+
+      volumes:
+        - db_data:/var/lib/mysql
+
+   web:
+      build: .
+      container_name: bookstore_flask
+      ports:
+        - "5000:5000"
+      environment:
+        MYSQL_HOST: db
+        MYSQL_USER: root
+        MYSQL_PASSWORD: example_root_password
+        MYSQL_DATABASE: bookstoredb
+      depends_on:
+        - db
+      volumes:
+        - .:/app
+  
+
+  
+volumes:
+  db_data:
+

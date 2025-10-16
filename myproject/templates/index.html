@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore Authentication</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font and basic setup */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7fafc;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+
+    <div class="w-full max-w-md">
+
+        <!-- FEEDBACK/MESSAGE CONTAINER -->
+        {% if message %}
+        {% set is_success = "successful" in message or "Welcome" in message %}
+        <div id="feedback-alert" class="p-4 mb-6 rounded-lg shadow-lg text-sm {% if is_success %}bg-green-100 text-green-800 border-green-400{% else %}bg-red-100 text-red-800 border-red-400{% endif %} border-l-4 font-semibold transition-all duration-300">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <!-- MAIN CARD CONTAINER -->
+        <div id="main-card" class="bg-white p-8 rounded-xl shadow-2xl border border-gray-200">
+            
+            <h1 class="text-3xl font-extrabold text-gray-900 mb-6 text-center">Welcome to Our Bookstore</h1>
+            <p id="welcome-message" class="text-center text-gray-500 mb-8 transition-all duration-300">
+                Please log in or create an account to continue your reading journey.
+            </p>
+            
+            <!-- VIEW CONTAINER -->
+            <div id="view-container">
+                <!-- Welcome/Initial Buttons View -->
+                <div id="initial-view" class="space-y-4">
+                    <button onclick="showView('login-view')" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition duration-300 shadow-md transform hover:scale-[1.01]">
+                        Log In
+                    </button>
+                    <button onclick="showView('signup-view')" class="w-full py-3 bg-gray-200 text-gray-800 font-bold rounded-lg hover:bg-gray-300 transition duration-300 shadow-md">
+                        Sign Up
+                    </button>
+                </div>
+
+                <!-- Login Form View -->
+                <div id="login-view" class="hidden">
+                    <h2 class="text-xl font-bold mb-6 text-gray-700">Log In to Your Account</h2>
+                    <form action="/login" method="POST" class="space-y-4">
+                        <div>
+                            <label for="login-email" class="block text-sm font-medium text-gray-700">Email ID</label>
+                            <input type="email" id="login-email" name="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <input type="password" id="login-password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition duration-300 shadow-lg mt-6">
+                            Log In
+                        </button>
+                    </form>
+                    <button onclick="showView('initial-view')" class="mt-4 w-full text-sm text-gray-500 hover:text-indigo-600 transition duration-300">
+                        &larr; Back to Main
+                    </button>
+                </div>
+
+                <!-- Signup Form View -->
+                <div id="signup-view" class="hidden">
+                    <h2 class="text-xl font-bold mb-6 text-gray-700">Create New Account</h2>
+                    <form action="/signup" method="POST" class="space-y-4">
+                        <div>
+                            <label for="signup-fullname" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" id="signup-fullname" name="full_name" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="signup-email" class="block text-sm font-medium text-gray-700">Email ID</label>
+                            <input type="email" id="signup-email" name="email" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <div>
+                            <label for="signup-password" class="block text-sm font-medium text-gray-700">Password</label>
+                            <input type="password" id="signup-password" name="password" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-700 transition duration-300 shadow-lg mt-6">
+                            Create Account
+                        </button>
+                    </form>
+                    <button onclick="showView('initial-view')" class="mt-4 w-full text-sm text-gray-500 hover:text-indigo-600 transition duration-300">
+                        &larr; Back to Main
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle view switching
+        function showView(viewId) {
+            document.querySelectorAll('#view-container > div').forEach(view => {
+                view.classList.add('hidden');
+            });
+            document.getElementById(viewId).classList.remove('hidden');
+        }
+
+        // Logic to determine initial view state after page load (e.g., after form submission)
+        document.addEventListener('DOMContentLoaded', () => {
+            const feedbackAlert = document.getElementById('feedback-alert');
+            // If there's a message, we default to the initial view so the user can try again or proceed to login.
+            if (!feedbackAlert) {
+                showView('initial-view');
+            }
+        });
+    </script>
+</body>
+</html>
